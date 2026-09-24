@@ -1,31 +1,31 @@
-name: S3DeployDev
+name: S3DeployStaging
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
 
 env:
   NODE_ENV: staging
-  APP_TITLE: ALeRCE Explorer - Staging Build
+  APP_TITLE: MS ALeRCE Explorer - Staging Build
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: development
+    environment: staging
     permissions:
       id-token: write
       contents: read
     env:
+      ALADIN_API_BASE_URL: ${{ secrets.ALADIN_API_BASE_URL }}
+      CROSSMATCH_API_BASE_URL: ${{ secrets.CROSSMATCH_API_BASE_URL }}
+      LIGHTCURVE_API_BASE_URL: ${{ secrets.LIGHTCURVE_API_BASE_URL }}
+      MAGSTATS_API_BASE_URL: ${{ secrets.MAGSTATS_API_BASE_URL }}
+      PROBABILITIES_API_BASE_URL: ${{ secrets.PROBABILITIES_API_BASE_URL }}
+      OBJECT_API_BASE_URL: ${{ secrets.OBJECT_API_BASE_URL }}
+      USERS_API_BASE_URL: ${{ secrets.USERS_API_BASE_URL }}
       AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
       AWS_CLOUDFRONT: ${{ secrets.AWS_CLOUDFRONT_ID }}
-      AVRO_API_BASE_URL: ${{ secrets.AVRO_API_BASE_URL }}
-      CATSHTM_API_BASE_URL: ${{ secrets.CATSHTM_API_BASE_URL }}
       GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
-      TNS_API_BASE_URL: ${{ secrets.TNS_API_BASE_URL }}
-      USERS_API_BASE_URL: ${{ secrets.USERS_API_BASE_URL }}
-      ALERCE_API_BASE_URL: ${{ secrets.ALERCE_API_BASE_URL }}
-      ALERCE_API_BASE_URL_OLD: ${{ secrets.ALERCE_API_BASE_URL_OLD }}
-      ZTF_DR_API_BASE_URL: ${{ secrets.ZTF_DR_API_BASE_URL }}
     steps:
       - name: Configure AWS credentials
         id: creds
