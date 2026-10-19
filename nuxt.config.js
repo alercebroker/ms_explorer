@@ -109,6 +109,8 @@ export default {
     aladinApiBaseUrl:
       process.env.ALADIN_API_BASE_URL || 'http://127.0.0.1:8006/',
     stampApiBaseUrl: process.env.STAMP_API_BASE_URL || 'http://127.0.0.1:8007/',
+    statusApiBaseUrl:
+      process.env.STATUS_API_BASE_URL || 'http://127.0.0.1:8008/',
     usersApiBaseUrl:
       process.env.USERS_API_BASE_URL || 'https://dev.users.alerce.online/users',
     googleRedirectUri:

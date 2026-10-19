@@ -4,6 +4,7 @@
       <v-img :src="headerLogo" max-width="40px" class="mr-4" />
       <v-toolbar-title class="mr-4">ALeRCE LSST Explorer</v-toolbar-title>
       <v-spacer />
+      <pipeline-status />
       <v-toolbar-items v-if="items">
         <v-btn v-for="item in items" :key="item.to" :href="item.to" text>
           {{ item.title }}
