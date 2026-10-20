@@ -9,11 +9,15 @@
         Fetching form ...
       </v-card-text>
     </v-card>
-    <v-card id="form-vue-container" :class="cardClass">
+    <!-- Transparent and flat: the htmx form draws its own box, which is narrower than the
+    column on wide screens, so a card background here would show as a second, empty box -->
+    <v-card id="form-vue-container" :class="cardClass" color="transparent" flat>
       <v-card
         id="form-search-app"
         width="100%"
         :height="height"
+        color="transparent"
+        flat
         hx-trigger="update-form from:body"
       >
       </v-card>
