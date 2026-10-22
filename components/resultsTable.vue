@@ -26,6 +26,7 @@
 
 <script>
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
+import { parseHtmxError } from '~/utils/htmx_error'
 
 @Component
 export default class ResultTableWrapper extends Vue {
@@ -44,7 +45,7 @@ export default class ResultTableWrapper extends Vue {
     this._loadHtmx()
 
     this.$el.addEventListener('htmx:responseError', (event) => {
-      this.error = event.detail.error
+      this.error = parseHtmxError(event)
       this.isLoading = false
     })
     this.$el.addEventListener('htmx:afterRequest', (event) => {

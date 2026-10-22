@@ -28,6 +28,7 @@
 
 <script>
 import { Vue, Component, Prop, Watch } from 'nuxt-property-decorator'
+import { parseHtmxError } from '~/utils/htmx_error'
 
 @Component
 export default class CardProbabilities extends Vue {
@@ -59,7 +60,7 @@ export default class CardProbabilities extends Vue {
 
     this._loadHtmx(_oid, params.survey)
     this.$el.addEventListener('htmx:responseError', (event) => {
-      this.error = event.detail.error
+      this.error = parseHtmxError(event)
       this.isLoading = false
     })
     this.$el.addEventListener('htmx:afterRequest', (event) => {

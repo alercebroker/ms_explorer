@@ -12,6 +12,7 @@
 
 <script>
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
+import { parseHtmxError } from '~/utils/htmx_error'
 
 @Component
 export default class sideListWrapper extends Vue {
@@ -33,7 +34,7 @@ export default class sideListWrapper extends Vue {
     this._checkQueryParams()
     this._loadHtmx()
     this.$el.addEventListener('htmx:responseError', (event) => {
-      this.error = event.detail.error
+      this.error = parseHtmxError(event)
       this.isLoading = false
       this.$store.dispatch('asyncComponents/setSideBarLoadingAction', false)
     })
