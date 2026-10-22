@@ -26,6 +26,7 @@
 
 <script>
 import { Vue, Component, Prop, Watch } from 'nuxt-property-decorator'
+import { parseHtmxError } from '~/utils/htmx_error'
 
 @Component
 export default class CardAladin extends Vue {
@@ -62,7 +63,7 @@ export default class CardAladin extends Vue {
     const aladinCard = document.getElementById('aladin-vue-app')
 
     aladinCard.addEventListener('htmx:responseError', (event) => {
-      this.error = event.detail.error
+      this.error = parseHtmxError(event)
       this.isLoading = false
     })
 
@@ -75,7 +76,7 @@ export default class CardAladin extends Vue {
       }
 
       if (event.detail.error) {
-        this.error = event.detail.error
+        this.error = parseHtmxError(event)
         this.isLoading = false
       }
     })
