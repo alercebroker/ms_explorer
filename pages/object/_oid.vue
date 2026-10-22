@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="sideBarLoad" :fluid="doFluid">
+  <v-container :fluid="doFluid">
     <v-row v-if="globalLoading" justify="center" align="center" class="py-2">
       <span class="ml-3 primary--text font-weight-medium">
         Loading object {{ loadingOid || $route.params.oid }}...
@@ -46,10 +46,6 @@ import { Vue, Component } from 'nuxt-property-decorator'
 export default class ObjectView extends Vue {
   head() {
     return { title: this.$route.params.oid }
-  }
-
-  get sideBarLoad() {
-    return this.$store.state.asyncComponents.sideBarLoaded
   }
 
   get globalLoading() {

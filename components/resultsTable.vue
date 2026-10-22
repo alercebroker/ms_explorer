@@ -27,6 +27,7 @@
 <script>
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { parseHtmxError } from '~/utils/htmx_error'
+import { saveSideList } from '~/utils/side_list_cache'
 
 @Component
 export default class ResultTableWrapper extends Vue {
@@ -125,6 +126,8 @@ export default class ResultTableWrapper extends Vue {
     rowsElements.forEach((element) => {
       window.htmx.on(element, 'click', (event) => {
         const oid = element.querySelector('[name="oid"]').textContent
+        const sideList = document.getElementById('side-list-html')
+        if (sideList) saveSideList(this.$route.query, sideList.innerHTML)
 
         this.$router.push({
           path: `/object/${oid}`,

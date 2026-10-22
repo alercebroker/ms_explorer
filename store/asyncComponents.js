@@ -7,13 +7,15 @@ import {
 
 @Module({ name: 'asyncComponents', namespaced: true, stateFactory: true })
 export default class ComponentsStore extends VuexModule {
-  sideBarLoaded = false
+  // The side list arrived or failed: Aladin waits for it, to draw the
+  // listed objects.
+  sideBarSettled = false
   globalLoading = false
   loadingOid = ''
 
   @VuexMutation
-  setSideBarLoad(val) {
-    this.sideBarLoaded = val
+  setSideBarSettled(val) {
+    this.sideBarSettled = val
   }
 
   @VuexMutation
@@ -27,8 +29,8 @@ export default class ComponentsStore extends VuexModule {
   }
 
   @VuexAction({ rawError: true })
-  setSideBarLoadingAction(val) {
-    this.setSideBarLoad(val)
+  setSideBarSettledAction(val) {
+    this.setSideBarSettled(val)
   }
 
   @VuexAction({ rawError: true })

@@ -13,6 +13,7 @@
 <script>
 import { Vue, Component, Watch } from 'nuxt-property-decorator'
 import { parseHtmxError } from '~/utils/htmx_error'
+import { savedSideList } from '~/utils/side_list_cache'
 
 @Component
 export default class sideListWrapper extends Vue {
@@ -26,17 +27,13 @@ export default class sideListWrapper extends Vue {
     return this.$vuetify.theme.dark
   }
 
-  get sideBarLoad() {
-    return this.$store.state.asyncComponents.sideBarLoaded
-  }
-
   mounted() {
+    this.$store.dispatch('asyncComponents/setSideBarSettledAction', false)
     this._checkQueryParams()
-    this._loadHtmx()
     this.$el.addEventListener('htmx:responseError', (event) => {
       this.error = parseHtmxError(event)
       this.isLoading = false
-      this.$store.dispatch('asyncComponents/setSideBarLoadingAction', false)
+      this.$store.dispatch('asyncComponents/setSideBarSettledAction', true)
     })
     this.$el.addEventListener('htmx:afterRequest', (event) => {
       if (event.detail.successful) {
@@ -51,9 +48,13 @@ export default class sideListWrapper extends Vue {
       if (event.detail.successful) {
         await this.$nextTick()
         this._displayObjectsBar()
-        this.$store.dispatch('asyncComponents/setSideBarLoadingAction', true)
+        this.$store.dispatch('asyncComponents/setSideBarSettledAction', true)
       }
     })
+
+    const savedList = savedSideList(this.QueryParams)
+    if (savedList) this._showSavedList(savedList)
+    else this._loadHtmx()
   }
 
   beforeDestroy() {
@@ -95,6 +96,28 @@ export default class sideListWrapper extends Vue {
       document.body.dispatchEvent(new Event('update-sidebar'))
       this._loadObserver()
     }
+  }
+
+  // The results table handed over the list of the page this object was
+  // opened from: no need to search again.
+  _showSavedList(html) {
+    this._loadObserver()
+    window.htmx.swap('#sidebar-objects-htmx', html, { swapStyle: 'innerHTML' })
+    this._markSelected(this.QueryParams.selected_oid)
+    this.isLoading = false
+    this.height = '100%'
+    this.onIsDarkChange(this.isDark)
+    this._displayObjectsBar()
+    this.$store.dispatch('asyncComponents/setSideBarSettledAction', true)
+  }
+
+  _markSelected(oid) {
+    const row = document.querySelector(
+      `[name="sidebar-row-element"][data-oid="${CSS.escape(String(oid))}"]`
+    )
+    if (row) row.classList.replace('obj-unselected-item', 'obj-selected-item')
+    const selectedCache = document.getElementById('selected_oid_cache')
+    if (selectedCache) selectedCache.value = oid
   }
 
   _loadObserver() {

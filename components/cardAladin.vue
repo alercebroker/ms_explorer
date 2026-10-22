@@ -88,9 +88,11 @@ export default class CardAladin extends Vue {
     this._loadObjectStore().then(() => this._loadHtmx(oid, params.survey))
   }
 
+  // Aladin draws the objects of the side list, so it waits for that list
+  // to arrive (or fail).
   _loadObjectStore() {
     return new Promise((resolve) => {
-      setTimeout(() => {
+      const read = () => {
         const objectsStore = document.getElementById('objects-store')
 
         if (objectsStore) {
@@ -98,7 +100,18 @@ export default class CardAladin extends Vue {
         }
 
         resolve()
-      }, 1000)
+      }
+
+      if (this.$store.state.asyncComponents.sideBarSettled) return read()
+      const unwatch = this.$store.watch(
+        (state) => state.asyncComponents.sideBarSettled,
+        (settled) => {
+          if (settled) {
+            unwatch()
+            read()
+          }
+        }
+      )
     })
   }
 
